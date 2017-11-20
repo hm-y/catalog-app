@@ -25,7 +25,7 @@ def showCategories():
 @app.route('/categories/JSON')
 def categoriesJSON():
     categories = session.query(Category).all()
-    return jsonify(categories=[r.serialize for r in restaurants])
+    return jsonify(categories=[r.serialize for r in categories])
 
 # Create new category
 
@@ -81,8 +81,7 @@ def deleteCategory(category_id):
         return redirect(
             url_for('showCategories', category_id=category_id))
     else:
-        return render_template(
-            'deleteCategory.html', category=deletedOne)
+        return render_template('deleteCategory.html', category=deletedOne)
 
 
 # CRUD & JSON for Item Table
@@ -92,24 +91,20 @@ def deleteCategory(category_id):
 @app.route('/categories/<int:category_id>/items/create/', methods=['GET', 'POST'])
 def addItem(category_id):
     if request.method == 'POST':
-        newItem = Item(title=request.form['title'],
-                            description=request.form['description'],
-                            category_id=category_id)
+        newItem = Item(title=request.form['title'], description=request.form['description'], category_id=category_id)
         session.add(newItem)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
-
     else:
-        return render_template('additem.html', category_id=category_id)
-    # necessary ???
-    return render_template('additem.html', category_id=category_id)
+        category = session.query(Category).filter_by(id=category_id).one()
+        return render_template('additem.html', category_id=category_id, category=category)
 
 
 # Read one item
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/')
-def showItem(item_id):
-    item = session.query(Item).filter_by(item_id=item_id).one()
+def showItem(category_id, item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
     return render_template('item.html', item=item)
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/JSON')
@@ -125,16 +120,16 @@ def updateItem(category_id, item_id):
     updatedOne = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['title']:
-            updatedOne.name = request.form['title']
+            updatedOne.title = request.form['title']
         if request.form['description']:
             updatedOne.description = request.form['description']
         session.add(updatedOne)
         session.commit()
-        return redirect(url_for('showCategory', category_id=category_id))
+        return redirect(url_for('showItem', category_id=category_id, item_id=item_id))
 
     else:
         return render_template(
-            'updateitem.html', category_id=category_id, item_id=item_id, item=updatedOne)
+            'updateItem.html', category_id=category_id, item_id=item_id, item=updatedOne)
 
 
 # Delete an item
