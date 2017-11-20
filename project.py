@@ -64,7 +64,7 @@ def updateCategory(category_id):
     if request.method == 'POST':
         if request.form['name']:
             updatedOne.name = request.form['name']
-            return redirect(url_for('showCategories'))
+            return redirect(url_for('showCategory', category_id = category_id))
     else:
         return render_template(
             'updateCategory.html', category=updatedOne)
@@ -104,8 +104,9 @@ def addItem(category_id):
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/')
 def showItem(category_id, item_id):
+    category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(Item).filter_by(id=item_id).one()
-    return render_template('item.html', item=item)
+    return render_template('item.html', category=category,item=item)
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/JSON')
 def oneItemJSON(item_id):
@@ -142,7 +143,7 @@ def deleteItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('deleteItem.html', item=deletedOne)
+        return render_template('deleteItem.html', category_id=category_id, item=deletedOne)
 
 
 # Run the website on the port 5000
