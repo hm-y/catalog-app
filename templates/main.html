@@ -1,12 +1,17 @@
-<html>
-  <head>
-    <title>Main Menu</title>
-  </head>
-  <body>
-    <h1>Categories</h1>
+{% extends "header.html" %}
+
+{% block content %}
+  <div class="column">
+    <h2>Categories</h2>
+    <button><a href="{{url_for('newCategory')}}">Add a category</a></button>
     {% for category in categories %}
       <a href="{{url_for('showCategory', category_id = category.id)}}"><p>{{category.name}}</p></a>
     {% endfor %}
-    <a href="{{url_for('newCategory')}}"><p>Add a category</p></a>
-  </body>
-</html>
+  </div>
+  <div class="column">
+    <h2>Latest items</h2>
+    {% for item in items | reverse %}
+      <a href="{{url_for('showItem', category_id = item.category_id, item_id=item.id)}}"><p>{{item.title}}</p></a>
+    {% endfor %}
+  </div>
+{% endblock %}

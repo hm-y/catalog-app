@@ -1,19 +1,24 @@
-<html>
-  <head>
-    <title>{{item.title}}</title>
-  </head>
-  <body>
-    <h1>Update item info</h1>
+{% extends "header.html" %}
+
+{% block content %}
+
+    <p>
+      <a href="{{url_for('showCategories')}}">Main Menu</a> /
+      <a href="{{url_for('showCategory', category_id=category.id)}}">{{category.name}}</a> /
+      <a href="{{url_for('showItem', category_id=category.id, item_id=item.id)}}">{{item.title}}</a>
+    </p>
+
+    <h2>Update "{{item.title}}"</h2>
 
     <form method="post">
       Title:<br>
       <input type="text" size="50" name="title" placeholder="{{item.title}}"><br>
-
+      <br>
       Description:<br>
-      <input type="text" size="250" name="description" placeholder="{{item.description}}"><br>
-
+      <input type="text" name="description" placeholder="{{item.description}}"><br>
+      <br>
       <input type='submit' value='Update'>
+      <button><a href="{{url_for('showItem', category_id=category.id, item_id=item.id)}}">Cancel</a></button>
     </form>
-    <a href="{{url_for('showItem', category_id=category_id, item_id=item.id)}}"><p>Cancel</p></a>
-  </body>
-</html>
+
+{% endblock %}

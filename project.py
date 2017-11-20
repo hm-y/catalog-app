@@ -19,8 +19,9 @@ session = DBSession()
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    items = session.query(Item).all()
     categories = session.query(Category).all()
-    return render_template('main.html', categories=categories)
+    return render_template('main.html', categories=categories, items=items)
 
 @app.route('/categories/JSON')
 def categoriesJSON():
@@ -79,7 +80,7 @@ def deleteCategory(category_id):
         session.delete(deletedOne)
         session.commit()
         return redirect(
-            url_for('showCategories', category_id=category_id))
+            url_for('showCategories'))
     else:
         return render_template('deleteCategory.html', category=deletedOne)
 
@@ -118,6 +119,7 @@ def oneItemJSON(item_id):
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/update', methods=['GET', 'POST'])
 def updateItem(category_id, item_id):
+    category = session.query(Category).filter_by(id=category_id).one()
     updatedOne = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['title']:
@@ -130,20 +132,21 @@ def updateItem(category_id, item_id):
 
     else:
         return render_template(
-            'updateItem.html', category_id=category_id, item_id=item_id, item=updatedOne)
+            'updateItem.html', category_id=category_id, item_id=item_id, category=category, item=updatedOne)
 
 
 # Delete an item
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
+    category = session.query(Category).filter_by(id=category_id).one()
     deletedOne = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(deletedOne)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('deleteItem.html', category_id=category_id, item=deletedOne)
+        return render_template('deleteItem.html', category_id=category_id, category=category, item=deletedOne)
 
 
 # Run the website on the port 5000
