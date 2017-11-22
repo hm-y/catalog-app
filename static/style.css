@@ -27,6 +27,15 @@ h1 {
   overflow: auto;
 }
 
+/* Flash messages */
+
+#messages {
+  width: 60%;
+  background-color: cornsilk;
+  text-align: center;
+  margin: auto;
+}
+
 /* Main Page */
 
 .column {

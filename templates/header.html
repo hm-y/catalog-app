@@ -9,9 +9,23 @@
     <header>
       <h1>Catalog App</h1>
     </header>
+
+    <div id="messages">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
+
     <div id="container">
       {% block content %}
       {% endblock %}
     </div>
+
   </body>
 </html>

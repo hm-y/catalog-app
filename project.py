@@ -1,11 +1,12 @@
 # Import libraries, Connect DB, Set up session
 
-from flask import Flask, render_template, request, redirect, jsonify, url_for
+from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_setup import Base, Category, Item
 
 app = Flask(__name__)
+app.secret_key = "my secret key"
 
 engine = create_engine('sqlite:///content.db')
 Base.metadata.bind = engine
@@ -36,6 +37,7 @@ def newCategory():
         newCategory = Category(name=request.form['name'])
         session.add(newCategory)
         session.commit()
+        flash("New category added!")
         return redirect(url_for('showCategories'))
     else:
         return render_template('newCategory.html')
@@ -65,7 +67,10 @@ def updateCategory(category_id):
     if request.method == 'POST':
         if request.form['name']:
             updatedOne.name = request.form['name']
-            return redirect(url_for('showCategory', category_id = category_id))
+        session.add(updatedOne)
+        session.commit()
+        flash("The category updated!")
+        return redirect(url_for('showCategory', category_id = category_id))
     else:
         return render_template(
             'updateCategory.html', category=updatedOne)
@@ -79,6 +84,7 @@ def deleteCategory(category_id):
     if request.method == 'POST':
         session.delete(deletedOne)
         session.commit()
+        flash("The category deleted!")
         return redirect(
             url_for('showCategories'))
     else:
@@ -95,6 +101,7 @@ def addItem(category_id):
         newItem = Item(title=request.form['title'], description=request.form['description'], category_id=category_id)
         session.add(newItem)
         session.commit()
+        flash("New item added!")
         return redirect(url_for('showCategory', category_id=category_id))
     else:
         category = session.query(Category).filter_by(id=category_id).one()
@@ -128,6 +135,7 @@ def updateItem(category_id, item_id):
             updatedOne.description = request.form['description']
         session.add(updatedOne)
         session.commit()
+        flash("The item updated!")
         return redirect(url_for('showItem', category_id=category_id, item_id=item_id))
 
     else:
@@ -144,6 +152,7 @@ def deleteItem(category_id, item_id):
     if request.method == 'POST':
         session.delete(deletedOne)
         session.commit()
+        flash("the item deleted!")
         return redirect(url_for('showCategory', category_id=category_id))
     else:
         return render_template('deleteItem.html', category_id=category_id, category=category, item=deletedOne)
