@@ -4,6 +4,9 @@ a web application that provides a list of items within a variety of categories a
 **!!![Under Construction]!!!***  
 
 ### How to use  
+- Start you virtual machine and login  
+-- Using [the same environment](https://github.com/udacity/fullstack-nanodegree-vm/blob/master/vagrant/Vagrantfile) is recommended.  
+-- vagrant up & vagrant ssh
 - Setup your database  
 -- run db_setup.py  
 -- (Database has two tables: Category (id, name) & Item (id, title, description, category))
