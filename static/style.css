@@ -24,6 +24,7 @@ h1 {
 
 #container {
   background-color: whitesmoke;
+  overflow: auto;
 }
 
 /* Main Page */
@@ -36,6 +37,10 @@ h1 {
   padding: 0;
 }
 
+h2 {
+  margin-top: 0px;
+}
+
 ul {
   padding: 0;
 }
@@ -45,12 +50,13 @@ ul {
   background-color: yellow;
   margin-bottom: 5px;
   text-align: center;
+  font-weight: bold;
 }
 
 .item {
   background-color: turquoise;
   margin-bottom: 5px;
-  padding-left: 15px;
+  padding-left: 25px;
 }
 
 li {
@@ -58,10 +64,28 @@ li {
   padding: 5px 0 5px 0;
 }
 
-form {
-  display: inline-block;
+a {
+  text-decoration: none;
+  color: black;
 }
 
-h2 {
-  color: #11056d;
+li a:hover {
+  color: #00f;
+}
+
+/* Category related pages */
+
+.common {
+  margin: 20px auto;
+  width: 90%;
+}
+
+p a {
+  font-weight: bolder;
+  text-decoration: underline;
+}
+
+form {
+  display: inline-block;
+  font-weight: bold;
 }
