@@ -1,5 +1,7 @@
 # Import libraries, Connect DB, Set up session
 
+# !/usr/bin/env python
+
 from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -157,6 +159,11 @@ def deleteItem(category_id, item_id):
     else:
         return render_template('deleteItem.html', category_id=category_id, category=category, item=deletedOne)
 
+# Login page
+
+@app.route('/login/')
+def login():
+    return render_template('login.html')
 
 # Run the website on the port 5000
 

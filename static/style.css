@@ -19,7 +19,45 @@ h1 {
   margin-left: 40px;
   position: relative;
   top: 50%;
+  transform: translateY(-100%);
+  float: left;
+}
+
+#login {
+  width: 40%;
+  height: 100%;
+  float: left;
+  position: relative;
+  top: 50%;
   transform: translateY(-50%);
+  overflow: auto;
+}
+
+#login button {
+  height: 40%;
+  width: 30%;
+  float: right;
+  background: #feda71;
+  border: solid 1px #eab551;
+  border-bottom: solid 3px #b98a37;
+  color: #996633;
+  text-shadow: 0 1px 0 #fedd9b;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#login button:hover {
+  background: #fec455;
+  border: solid 1px #e6a93d;
+  border-bottom: solid 3px #b98a37;
+  box-shadow: inset 0 0 0 1px #fedb98;
+}
+
+#login button:active {
+  background: #f9bd4f;
+  border: solid 1px #a77f35;
+  box-shadow: inset 0 10px 15px 0 #dba646;
 }
 
 #container {
@@ -39,7 +77,7 @@ h1 {
 /* Main Page */
 
 .column {
-  width: 30%;
+  width: 40%;
   display: inline-block;
   vertical-align: top;
   margin: 30px 0 0 30px;
