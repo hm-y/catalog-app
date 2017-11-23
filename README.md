@@ -18,6 +18,11 @@ a web application that provides a list of items within a variety of categories a
 [Musics](https://theculturetrip.com/north-america/articles/the-10-influential-songs-that-changed-the-world/), 
 [Foods](http://www.cnn.com/travel/article/world-best-food-dishes/index.html), 
 [Websites](https://en.wikipedia.org/wiki/List_of_most-popular_websites))  
+- For Google sign in:  
+-- Create an OAuth Client ID on the Google APIs Console and put in into the variable **data-clientid** in **login.html**  
+-- Enter JavaScript origins ["http://localhost:5000/"]  
+-- Enter redirect URIs ["http://localhost:5000/categories/","http://localhost:5000/"]  
+-- Download JSON file and put into the project folder and make its name **client_secrets**  
   
 
 ### Routes  
