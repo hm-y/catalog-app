@@ -1,9 +1,59 @@
 {% extends "header.html" %}
 
+{% block head %}
+  <!-- Add libraries for google connection -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+{% endblock %}
+
 {% block content %}
   <div class="common">
+
     <h2>Log in your account</h2>
+    </br></br>
+
+    <div id="signinButton">
+      <span class="g-signin"
+        data-scope="openid email"
+        data-clientid="534367507870-f8s3fbj6mee02ia1hued2f4n8smqi7to.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback"
+        data-approvalprompt="force">
+      </span>
+    </div>
+    <div id="result"></div>
+
     </br></br>
     <button><a href="{{url_for('showCategories')}}">Back</a></button>
   </div>
+
+  <script>
+    // Try to sign in and notify the user
+    // Taken from Part 3 Lesson 11 - Udacity FSND and edited
+    function signInCallback(authResult) {
+      if (authResult['code']) {
+        // Hide the button after authorization
+        $('#signinButton').attr('style', 'display: none');
+        $.ajax({
+          type: 'POST',
+          url: '/gconnect?state={{STATE}}',
+          processData: false,
+          data: authResult['code'],
+          contentType: 'application/octet-stream; charset=utf-8',
+          success: function(result) {
+            if (result) {
+              $('#result').html('</br>Redirecting...')
+              setTimeout(function() {
+                window.location.href = "/categories";
+              }, 1000);
+            } else {
+              $('#result').html('Something bad happened. :(');
+            }
+          }
+        });
+      }
+    }
+    </script>
 {% endblock %}

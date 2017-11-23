@@ -2,4 +2,5 @@
 /db_setup.pyc
 /todo.txt
 /content.db-journal
-/.ropeproject/
+.ropeproject/
+client_secrets.json
