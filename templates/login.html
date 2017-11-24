@@ -23,6 +23,15 @@
         data-approvalprompt="force">
       </span>
     </div>
+    </br></br>
+
+    <button id="signinButton2">
+      <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+      </fb:login-button>
+    </button>
+
+
     <div id="result"></div>
 
     </br></br>
@@ -30,12 +39,14 @@
   </div>
 
   <script>
+    // GOOGLE SIGN IN
     // Try to sign in and notify the user
     // Taken from Part 3 Lesson 11 - Udacity FSND and edited
     function signInCallback(authResult) {
       if (authResult['code']) {
         // Hide the button after authorization
         $('#signinButton').attr('style', 'display: none');
+        $('#signinButton2').attr('style', 'display: none');
         $.ajax({
           type: 'POST',
           url: '/gconnect?state={{STATE}}',
@@ -55,5 +66,52 @@
         });
       }
     }
-    </script>
+
+    // FACEBOOK SIGN IN
+    window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '159422448138160',
+      cookie     : true,  // enable cookies to allow the server to access
+                          // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.2' // use version 2.2
+    });
+    };
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function sendTokenToServer() {
+        var access_token = FB.getAuthResponse()['accessToken'];
+
+        FB.api('/me', function(response) {
+          $('#signinButton').attr('style', 'display: none');
+          $('#signinButton2').attr('style', 'display: none');
+          $.ajax({
+            type: 'POST',
+            url: '/fbconnect?state={{STATE}}',
+            processData: false,
+            data: access_token,
+            contentType: 'application/octet-stream; charset=utf-8',
+
+            success: function(result) {
+              if (result) {
+                $('#result').html('</br>Redirecting...')
+                setTimeout(function() {
+                  window.location.href = "/categories";
+                }, 1000);
+              } else {
+                $('#result').html('Something bad happened. :(');
+              }
+            }
+          });
+        });
+      }
+  </script>
 {% endblock %}
