@@ -11,7 +11,11 @@
     <header>
       <h1><a href="{{url_for('showCategories')}}">Catalog App</a></h1>
       <div id="login">
+        {%if 'username' not in session %}
         <button><a href="{{url_for('login')}}">Login</a></button>
+        {% else %}
+        <button><a href="{{url_for('disconnect')}}">Logout</a></button>
+        {% endif %}
       </div>
     </header>
 
