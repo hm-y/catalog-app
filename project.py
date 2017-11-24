@@ -6,7 +6,7 @@ from flask import Flask, render_template, request
 from flask import redirect, jsonify, url_for, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_setup import Base, Category, Item
+from db_setup import Base, Category, Item, User
 
 from flask import session as login_session
 import random
@@ -29,6 +29,7 @@ session = DBSession()
 
 CLIENT_ID = json.loads(open(
     'client_secrets.json', 'r').read())['web']['client_id']
+registeredUser = False
 
 # CRUD & JSON for Category Table
 
@@ -58,7 +59,8 @@ def newCategory():
         flash("You need to log in to create a new category!")
         return redirect('/login')
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'])
+        newCategory = Category(name=request.form['name'],
+                               user_id=login_session['user_id'])
         session.add(newCategory)
         session.commit()
         flash("New category added!")
@@ -74,7 +76,13 @@ def newCategory():
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category_id).all()
-    return render_template('category.html', items=items, category=category)
+    owner = getUserInfo(category.user_id)
+    if 'username' not in login_session or owner.id != login_session['user_id']:
+        registeredUser = False
+    else:
+        registeredUser = True
+    return render_template('category.html', items=items,
+                           category=category, registeredUser=registeredUser)
 
 
 @app.route('/categories/<int:category_id>/JSON')
@@ -135,7 +143,8 @@ def addItem(category_id):
     if request.method == 'POST':
         newItem = Item(title=request.form['title'],
                        description=request.form['description'],
-                       category_id=category_id)
+                       category_id=category_id,
+                       user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         flash("New item added!")
@@ -152,7 +161,13 @@ def addItem(category_id):
 def showItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(Item).filter_by(id=item_id).one()
-    return render_template('item.html', category=category, item=item)
+    owner = getUserInfo(item.user_id)
+    if 'username' not in login_session or owner.id != login_session['user_id']:
+        registeredUser = False
+    else:
+        registeredUser = True
+    return render_template('item.html', category=category,
+                           item=item, registeredUser=registeredUser)
 
 
 @app.route('/categories/<int:category_id>/items/<int:item_id>/JSON')
@@ -294,8 +309,37 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
     flash("Logged in!")
     return "Done!"
+
+# User Helper Functions
+
+
+def createUser(login_session):
+    newUser = User(name=login_session['username'],
+                   email=login_session['email'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
 
 
 @app.route('/gdisconnect/')

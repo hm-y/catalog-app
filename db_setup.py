@@ -1,7 +1,5 @@
 # import the necessary tools and define Base
 
-import os
-import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -11,6 +9,15 @@ Base = declarative_base()
 
 # Define the classes for the database
 
+
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+
+
 class Category(Base):
     '''The table to hold all the category names and ids'''
 
@@ -18,6 +25,8 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -37,6 +46,8 @@ class Item(Base):
     description = Column(String(250), nullable=False)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -48,6 +59,7 @@ class Item(Base):
         }
 
 # Go for engine
+
 
 engine = create_engine('sqlite:///content.db')
 Base.metadata.create_all(engine)

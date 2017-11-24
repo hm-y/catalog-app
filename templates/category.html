@@ -15,7 +15,9 @@
     </ul>
 
     <button><a href="{{url_for('addItem', category_id=category.id)}}">Add a new item</a></button>
-    <button><a href="{{url_for('updateCategory', category_id = category.id)}}">Rename category</a></button>
-    <button><a href="{{url_for('deleteCategory', category_id = category.id)}}">Delete category</a></button>
+    {% if registeredUser %}
+      <button><a href="{{url_for('updateCategory', category_id = category.id)}}">Rename category</a></button>
+      <button><a href="{{url_for('deleteCategory', category_id = category.id)}}">Delete category</a></button>
+    {% endif %}
   </div>
 {% endblock %}
