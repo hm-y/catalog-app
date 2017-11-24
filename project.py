@@ -55,6 +55,7 @@ def categoriesJSON():
 @app.route('/categories/create/', methods=['GET', 'POST'])
 def newCategory():
     if 'username' not in login_session:
+        flash("You need to log in to create a new category!")
         return redirect('/login')
     if request.method == 'POST':
         newCategory = Category(name=request.form['name'])
@@ -88,6 +89,7 @@ def oneCategoryJSON(category_id):
 @app.route('/categories/<int:category_id>/update/', methods=['GET', 'POST'])
 def updateCategory(category_id):
     if 'username' not in login_session:
+        flash("You need to log in to update your category.")
         return redirect('/login')
     updatedOne = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
@@ -107,6 +109,7 @@ def updateCategory(category_id):
 @app.route('/categories/<int:category_id>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_id):
     if 'username' not in login_session:
+        flash("You need to log in to delete your category.")
         return redirect('/login')
     deletedOne = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
@@ -127,6 +130,7 @@ def deleteCategory(category_id):
            methods=['GET', 'POST'])
 def addItem(category_id):
     if 'username' not in login_session:
+        flash("You need to log in to add a new item.")
         return redirect('/login')
     if request.method == 'POST':
         newItem = Item(title=request.form['title'],
@@ -163,6 +167,7 @@ def oneItemJSON(item_id):
            methods=['GET', 'POST'])
 def updateItem(category_id, item_id):
     if 'username' not in login_session:
+        flash("You need to log in to update your item.")
         return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
     updatedOne = session.query(Item).filter_by(id=item_id).one()
@@ -189,6 +194,7 @@ def updateItem(category_id, item_id):
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
     if 'username' not in login_session:
+        flash("You need to log in to delete your item.")
         return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
     deletedOne = session.query(Item).filter_by(id=item_id).one()
@@ -288,6 +294,7 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    flash("Logged in!")
     return "Done!"
 
 
@@ -317,7 +324,8 @@ def gdisconnect():
         del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        flash("Logged out!")
+        return redirect('/')
     else:
         response = make_response(json.dumps('Failed to revoke token \
                                                 for given user.', 400))
