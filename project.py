@@ -130,8 +130,11 @@ def deleteCategory(category_id):
         flash("You need to log in to delete your category.")
         return redirect('/login')
     deletedOne = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category_id).all()
     if request.method == 'POST':
         session.delete(deletedOne)
+        for item in items:
+            session.delete(item)
         session.commit()
         flash("The category deleted!")
         return redirect(
