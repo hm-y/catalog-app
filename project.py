@@ -62,9 +62,17 @@ def newCategory():
         flash("You need to log in to create a new category!")
         return redirect('/login')
     if request.method == 'POST':
+        categories = session.query(Category).all()
         name = request.form['name']
+        isSame = False
+        for cat in categories:
+            if cat.name == name:
+                isSame = True
         if not name:
             flash("The name cannot be blank.")
+            return render_template('newCategory.html')
+        elif isSame:
+            flash("There is already a category with the name '" + name + "'.")
             return render_template('newCategory.html')
         else:
             newCategory = Category(name=name,
@@ -96,6 +104,7 @@ def showCategory(category_id):
 
 
 @app.route('/categories/<int:category_id>/JSON')
+@app.route('/categories/<int:category_id>/items/JSON')
 def oneCategoryJSON(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category_id).all()
@@ -111,9 +120,18 @@ def updateCategory(category_id):
         return redirect('/login')
     updatedOne = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
+        categories = session.query(Category).all()
         name = request.form['name']
+        isSame = False
+        for cat in categories:
+            if cat.name == name:
+                isSame = True
         if not name:
             flash("The name cannot be blank.")
+            return render_template(
+                'updateCategory.html', category=updatedOne)
+        elif isSame:
+            flash("There is already a category with the name '" + name + "'.")
             return render_template(
                 'updateCategory.html', category=updatedOne)
         else:
@@ -160,10 +178,20 @@ def addItem(category_id):
         flash("You need to log in to add a new item.")
         return redirect('/login')
     if request.method == 'POST':
+        items = session.query(Item).filter_by(category_id=category_id).all()
         title = request.form['title']
         description = request.form['description']
+        isSame = False
+        for item in items:
+            if item.title == title:
+                isSame = True
         if not title or not description:
             flash("The title or description cannot be blank.")
+            return render_template('additem.html',
+                                   category_id=category_id, category=category)
+        elif isSame:
+            flash("There is already an item with the title '" + title
+                  + "' in this category.")
             return render_template('additem.html',
                                    category_id=category_id, category=category)
         else:
@@ -212,10 +240,21 @@ def updateItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     updatedOne = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
+        items = session.query(Item).filter_by(category_id=category_id).all()
         title = request.form['title']
         description = request.form['description']
+        isSame = False
+        for item in items:
+            if item.title == title:
+                isSame = True
         if not title or not description:
             flash("The title or description cannot be blank.")
+            return render_template(
+                'updateItem.html', category_id=category_id, item_id=item_id,
+                category=category, item=updatedOne)
+        elif isSame:
+            flash("There is already an item with the title '" + title
+                  + "' in this category.")
             return render_template(
                 'updateItem.html', category_id=category_id, item_id=item_id,
                 category=category, item=updatedOne)
