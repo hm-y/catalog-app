@@ -12,10 +12,10 @@
 
     <form method="post">
       Title:
-      <input type="text" size="50" name="title" placeholder="{{item.title}}"><br>
+      <input type="text" size="50" name="title" value="{{item.title}}"><br>
       <br>
       Description:<br><br>
-      <input type="text" size="75" name="description" placeholder="{{item.description}}"><br>
+      <input type="text" size="75" name="description" value="{{item.description}}"><br>
       <br>
       <input type='submit' value='Update'>
       <button><a href="{{url_for('showItem', category_id=category.id, item_id=item.id)}}">Cancel</a></button>

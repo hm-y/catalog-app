@@ -10,7 +10,7 @@
     <h2>Update category name</h2>
     <form action="#" method="post">
       Name:
-      <input type="text" size="50" name="name" placeholder="{{category.name}}"><br>
+      <input type="text" size="50" name="name" value="{{category.name}}"><br>
       <br>
       <input type='submit' value='Update'>
       <button><a href="{{url_for('showCategory', category_id=category.id)}}">Cancel</a></button>

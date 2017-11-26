@@ -59,12 +59,17 @@ def newCategory():
         flash("You need to log in to create a new category!")
         return redirect('/login')
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'],
-                               user_id=login_session['user_id'])
-        session.add(newCategory)
-        session.commit()
-        flash("New category added!")
-        return redirect(url_for('showCategories'))
+        name = request.form['name']
+        if not name:
+            flash("The name cannot be blank.")
+            return render_template('newCategory.html')
+        else:
+            newCategory = Category(name=name,
+                                   user_id=login_session['user_id'])
+            session.add(newCategory)
+            session.commit()
+            flash("New category added!")
+            return redirect(url_for('showCategories'))
     else:
         return render_template('newCategory.html')
 
@@ -101,12 +106,17 @@ def updateCategory(category_id):
         return redirect('/login')
     updatedOne = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
-        if request.form['name']:
-            updatedOne.name = request.form['name']
-        session.add(updatedOne)
-        session.commit()
-        flash("The category updated!")
-        return redirect(url_for('showCategory', category_id=category_id))
+        name = request.form['name']
+        if not name:
+            flash("The name cannot be blank.")
+            return render_template(
+                'updateCategory.html', category=updatedOne)
+        else:
+            updatedOne.name = name
+            session.add(updatedOne)
+            session.commit()
+            flash("The category updated!")
+            return redirect(url_for('showCategory', category_id=category_id))
     else:
         return render_template(
             'updateCategory.html', category=updatedOne)
@@ -137,20 +147,27 @@ def deleteCategory(category_id):
 @app.route('/categories/<int:category_id>/items/create/',
            methods=['GET', 'POST'])
 def addItem(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
     if 'username' not in login_session:
         flash("You need to log in to add a new item.")
         return redirect('/login')
     if request.method == 'POST':
-        newItem = Item(title=request.form['title'],
-                       description=request.form['description'],
-                       category_id=category_id,
-                       user_id=login_session['user_id'])
-        session.add(newItem)
-        session.commit()
-        flash("New item added!")
-        return redirect(url_for('showCategory', category_id=category_id))
+        title = request.form['title']
+        description = request.form['description']
+        if not title or not description:
+            flash("The title or description cannot be blank.")
+            return render_template('additem.html',
+                                   category_id=category_id, category=category)
+        else:
+            newItem = Item(title=title,
+                           description=description,
+                           category_id=category_id,
+                           user_id=login_session['user_id'])
+            session.add(newItem)
+            session.commit()
+            flash("New item added!")
+            return redirect(url_for('showCategory', category_id=category_id))
     else:
-        category = session.query(Category).filter_by(id=category_id).one()
         return render_template('additem.html',
                                category_id=category_id, category=category)
 
@@ -187,15 +204,21 @@ def updateItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     updatedOne = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
-        if request.form['title']:
-            updatedOne.title = request.form['title']
-        if request.form['description']:
-            updatedOne.description = request.form['description']
-        session.add(updatedOne)
-        session.commit()
-        flash("The item updated!")
-        return redirect(url_for('showItem',
-                                category_id=category_id, item_id=item_id))
+        title = request.form['title']
+        description = request.form['description']
+        if not title or not description:
+            flash("The title or description cannot be blank.")
+            return render_template(
+                'updateItem.html', category_id=category_id, item_id=item_id,
+                category=category, item=updatedOne)
+        else:
+            updatedOne.title = title
+            updatedOne.description = description
+            session.add(updatedOne)
+            session.commit()
+            flash("The item updated!")
+            return redirect(url_for('showItem',
+                                    category_id=category_id, item_id=item_id))
 
     else:
         return render_template(
