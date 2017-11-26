@@ -190,8 +190,8 @@ def addItem(category_id):
             return render_template('additem.html',
                                    category_id=category_id, category=category)
         elif isSame:
-            flash("There is already an item with the title '" + title
-                  + "' in this category.")
+            flash("There is already an item with the title '" + title +
+                  "' in this category.")
             return render_template('additem.html',
                                    category_id=category_id, category=category)
         else:
@@ -253,8 +253,8 @@ def updateItem(category_id, item_id):
                 'updateItem.html', category_id=category_id, item_id=item_id,
                 category=category, item=updatedOne)
         elif isSame:
-            flash("There is already an item with the title '" + title
-                  + "' in this category.")
+            flash("There is already an item with the title '" + title +
+                  "' in this category.")
             return render_template(
                 'updateItem.html', category_id=category_id, item_id=item_id,
                 category=category, item=updatedOne)
@@ -454,15 +454,15 @@ def fbconnect():
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
 
-
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
     '''
-        Due to the formatting for the result from the server token exchange we have to
-        split the token first on commas and select the first index which gives us the key : value
-        for the server access token then we split it on colons to pull out the actual token value
-        and replace the remaining quotes with nothing so that it can be used directly in the graph
-        api calls
+        Due to the formatting for the result from the server token exchange we
+        have to split the token first on commas and select the first index
+        which gives us the key : value for the server access token then we
+        split it on colons to pull out the actual token value and replace
+        the remaining quotes with nothing so that it can be used directly
+        in the graph api calls
     '''
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
@@ -502,12 +502,16 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
+          facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "Done!"
 
+
 # Disconnect based on provider
+
+
 @app.route('/disconnect')
 def disconnect():
     if 'provider' in login_session:
