@@ -4,6 +4,7 @@
   <div>
     <div class="column">
       <h2>Categories</h2>
+      <p>{{num_cat}} categories</p>
       <ul>
       {% for category in categories %}
         <li class="catname"><a href="{{url_for('showCategory', category_id = category.id)}}">{{category.name}}</a></li>
@@ -15,6 +16,7 @@
     </div>
     <div class="column">
       <h2>Latest items</h2>
+      <p>{{num_items}} items</p>
       <ul>
       {% for item in items | reverse %}
         <li class="item"><a href="{{url_for('showItem', category_id = item.category_id, item_id=item.id)}}">{{item.title}}</a></li>

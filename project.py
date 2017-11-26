@@ -40,8 +40,11 @@ registeredUser = False
 @app.route('/categories/')
 def showCategories():
     items = session.query(Item).all()
+    num_items = session.query(Item).count()
     categories = session.query(Category).all()
-    return render_template('main.html', categories=categories, items=items)
+    num_categories = session.query(Category).count()
+    return render_template('main.html', categories=categories, items=items,
+                           num_items=num_items, num_cat=num_categories)
 
 
 @app.route('/categories/JSON')
@@ -81,13 +84,15 @@ def newCategory():
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category_id).all()
+    num_items = session.query(Item).filter_by(category_id=category_id).count()
     owner = getUserInfo(category.user_id)
     if 'username' not in login_session or owner.id != login_session['user_id']:
         registeredUser = False
     else:
         registeredUser = True
     return render_template('category.html', items=items,
-                           category=category, registeredUser=registeredUser)
+                           category=category, registeredUser=registeredUser,
+                           num_items=num_items)
 
 
 @app.route('/categories/<int:category_id>/JSON')

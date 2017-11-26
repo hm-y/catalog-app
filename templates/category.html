@@ -8,6 +8,7 @@
     </p>
 
     <h2>{{category.name}}</h2>
+    <p>{{num_items}} items</p>
     <ul>
     {% for item in items %}
       <li class="item"><a href="{{url_for('showItem', category_id = category.id, item_id=item.id)}}">{{item.title}}</a></li>
