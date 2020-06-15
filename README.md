@@ -2,7 +2,7 @@
 A web application that provides a list of items within a variety of categories and integrate third party user registration and authentication. Authenticated users should have the ability to post, edit, and delete their own items.  
 
 **Written in:** Python, HTML, CSS, PostgreSQL  
-**Using:** VirtualBox, Vagrant, , Flask, SQLAlchemy, Google Sign in, Facebook Sign in   
+**Using:** VirtualBox, Vagrant, Flask, SQLAlchemy, Google Sign in, Facebook Sign in   
 
 <img src="/img/main.png" alt="Home" width="400">  <img src="/img/login.png" alt="Login" width="400" >
 
